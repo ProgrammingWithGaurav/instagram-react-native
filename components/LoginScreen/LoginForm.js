@@ -47,7 +47,7 @@ const LoginForm = ({navigation}) => {
           <>
             <View style={[styles.inputField, 
             {
-              borderColor: values.email.length < 1 || Validator.validate(values.email) ? '#ccc': 'red'
+              borderColor: errors.email ? 'red' : '#ccc'
             }]}>
               <TextInput
                 placeholderTextColor='#444'
@@ -64,7 +64,7 @@ const LoginForm = ({navigation}) => {
 
             <View style={[styles.inputField, 
             {
-              borderColor: 1 > values.password.length || values.password.length > 6 ? ' #ccc' : 'red'
+              borderColor: errors.password ? 'red' : '#ccc'
             }]}>
               <TextInput
                 placeholderTextColor='#444'
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     marginTop: 80
   },
   inputField: {
-    bordreRadius: 4,
+    borderRadius: 4,
     padding: 8,
     backgroundColor: '#FAFAFA',
     marginBottom: 10,

@@ -1,19 +1,33 @@
 import { View, Text, ScrollView,Image, StyleSheet } from 'react-native';
-import React from 'react';
-import { Users } from '../../data/users.js';
+import React , {useState, useEffect} from 'react';
+import {firebase, db} from '../../firebase';
 
 const Stories = () => {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        db.collection('users')
+        .onSnapshot(snapshot => {
+            setUsers(snapshot.docs.map(user =>
+            (
+                {
+                    id: user.id, ...user.data()
+                }
+            )))
+        })
+    }, [])
+
     return (
-        <View style={{ marginBottom: 13 }}>
+        <View style={{ marginTop: 13 }}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {
-                    Users.map((story, index) => (
+                    users.map((user, index) => (
                         <View key={index} style={{alignItems: 'center'}}>
                             <Image
-                                source={{ uri: story.image }}
+                                source={{ uri: user.profile_picture }}
                                 style={styles.story}
                             />
-                            <Text style={{color: 'white'}}>{story.user.length > 11 ? story.user.length(0, 10).toLowerCase() + '...' : story.user.toLowerCase()}</Text>
+                            <Text style={{color: 'white'}}>{user.username.length > 11 ? user.username.length(0, 6).toLowerCase() + '...' : user.username.toLowerCase()}</Text>
                         </View>
                     ))
                 }
@@ -21,14 +35,14 @@ const Stories = () => {
             <Text>Stories</Text>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     story: {
         width: 70,
         height: 70,
         borderRadius: 50,
-        marginLeft: 6,
+        marginLeft: 18,
         borderWidth: 3,
         borderColor: '#ff8501',
     }

@@ -1,37 +1,47 @@
-import { View, StyleSheet,Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { firebase } from '../../firebase';
 
-const Header = ({navigation}) => {
+const handleSignOut = async () => {
+  try {
+    await firebase.auth().signOut()
+    console.log('sign out successfully');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const Header = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
-      <Image
-        style={styles.logo}
-        source={require('../../assets/header-logo.png')}
-      />
+      <TouchableOpacity onPress={handleSignOut}>
+        <Image
+          style={styles.logo}
+          source={require('../../assets/header-logo.png')}
+        />
       </TouchableOpacity>
 
       <View style={styles.iconsContainer}>
         <TouchableOpacity
-            onPress={() => navigation.push('NewPostScreen')}
->
-          <Image 
-            source={{uri: 'https://img.icons8.com/fluency-systems-regular/60/ffffff/plus-2-math.png'}}
+          onPress={() => navigation.push('NewPostScreen')}
+        >
+          <Image
+            source={{ uri: 'https://img.icons8.com/fluency-systems-regular/60/ffffff/plus-2-math.png' }}
             style={styles.icon}
           />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Image 
-            source={{uri: 'https://img.icons8.com/fluency-systems-regular/60/ffffff/like--v1.png'}}
+          <Image
+            source={{ uri: 'https://img.icons8.com/fluency-systems-regular/60/ffffff/like--v1.png' }}
             style={styles.icon}
           />
         </TouchableOpacity>
         <TouchableOpacity>
           <View style={styles.unreadBadge}>
-              <Text style={styles.unreadBadgeText}>2</Text> 
+            <Text style={styles.unreadBadgeText}>2</Text>
           </View>
-          <Image 
-            source={{uri: 'https://img.icons8.com/fluency-systems-regular/60/ffffff/facebook-messenger.png'}}
+          <Image
+            source={{ uri: 'https://img.icons8.com/fluency-systems-regular/60/ffffff/facebook-messenger.png' }}
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -45,7 +55,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    marginTop: 10
   },
   iconsContainer: {
     flexDirection: 'row',

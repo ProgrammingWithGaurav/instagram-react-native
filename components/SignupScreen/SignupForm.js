@@ -1,9 +1,9 @@
-import { View, StyleSheet, Text, TextInput, Pressable, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Pressable, TouchableOpacity, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Validator from 'email-validator';
 import { firebase, db } from '../../firebase';
-import React, { useState } from 'react';
+import React from 'react';
 
 const SignupForm = ({ navigation }) => {
     const SignupSchema = Yup.object().shape({
@@ -23,12 +23,14 @@ const SignupForm = ({ navigation }) => {
             const authUser = await firebase.auth().createUserWithEmailAndPassword(email, password);
             console.log('Account Created ✅🚀')
 
-            db.collection('users').add({
-                owner_id: authUser.user.uid,
-                username: username,
-                email: authUser.user.email,
-                profile_picture: await getRandomProfilePicture()
-          })
+            db.collection('users')
+                .doc(authUser.user.email)
+                .set({
+                    owner_id: authUser.user.uid,
+                    username: username,
+                    email: authUser.user.email,
+                    profile_picture: await getRandomProfilePicture()
+                })
             navigation.navigate('HomeScreen');
         } catch (error) {
             Alert.alert(
@@ -40,8 +42,8 @@ const SignupForm = ({ navigation }) => {
                         style: 'cancel'
                     },
                     {
-                        text: 'Sign Up',
-                        onPress: () => navigation.push('SignupScreen')
+                        text: 'Login',
+                        onPress: () => navigation.push('LoginScreen')
                     }
                 ]
             );
@@ -53,14 +55,14 @@ const SignupForm = ({ navigation }) => {
 
                 initialValues={{ email: '', username: '', password: '' }}
                 onSubmit={values => { onSignup(values.email, values.password, values.username) }}
-                validationSchema={LoginSchema}
+                validationSchema={SignupSchema}
                 validateOnMount={true}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, isValid, errors }) => (
                     <>
                         <View style={[styles.inputField,
                         {
-                            borderColor: values.email.length < 1 || Validator.validate(values.email) ? '#ccc' : 'red'
+                            borderColor: errors.email ? 'red' : '#ccc'
                         }]}>
                             <TextInput
                                 placeholderTextColor='#444'
@@ -74,7 +76,9 @@ const SignupForm = ({ navigation }) => {
                                 value={values.email}
                             />
                         </View>
-                        <View style={[styles.inputField, { borderColor: values.username.length < 2 ? 'red' : '#ccc' }]}>
+                        <View style={[styles.inputField, {
+                            borderColor: errors.username ? 'red' : '#ccc'
+                        }]}>
                             <TextInput
                                 placeholderTextColor='#444'
                                 placeholder='Username'
@@ -87,7 +91,7 @@ const SignupForm = ({ navigation }) => {
 
                         <View style={[styles.inputField,
                         {
-                            borderColor: 1 > values.password.length || values.password.length > 6 ? ' #ccc' : 'red'
+                            borderColor: errors.password ? 'red' : '#ccc'
                         }]}>
                             <TextInput
                                 placeholderTextColor='#444'
@@ -128,7 +132,7 @@ const styles = StyleSheet.create({
         marginTop: 80
     },
     inputField: {
-        bordreRadius: 4,
+        borderRadius: 4,
         padding: 8,
         backgroundColor: '#FAFAFA',
         marginBottom: 10,

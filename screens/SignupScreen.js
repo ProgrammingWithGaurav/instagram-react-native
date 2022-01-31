@@ -2,7 +2,6 @@ import { View, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import SignupForm from '../components/SignupScreen/SignupForm';
 
-
 const Instagram_logo = 'https://cdn-icons-png.flaticon.com/128/174/174855.png';
 
 const LoginScreen = ({navigation}) => {

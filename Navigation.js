@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 const screenOptions = {
     headerShown: false
 }
-export default const SignedInStack = () => (
+export const SignedInStack = () => (
     <NavigationContainer>
         <Stack.Navigator initialRouteName='SignupScreen' screenOptions={screenOptions}>
         <Stack.Screen name='HomeScreen' component={HomeScreen} />
@@ -20,7 +20,7 @@ export default const SignedInStack = () => (
     </NavigationContainer>
 )
 
-export const SignOutStack = () => (
+export const SignedOutStack = () => (
     <NavigationContainer>
         <Stack.Navigator initialRouteName='LoginScreen' screenOptions={screenOptions}>
         <Stack.Screen name='LoginScreen' component={LoginScreen} />
